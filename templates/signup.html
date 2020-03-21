@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block body %}
+<header class="page-header header container-fluid">
+  <div class="container-fluid" style="margin-top:10em;">
+  <div class="row">
+  <div class="col"></div>
+  <div class="col col-sm-4">
+    <form class="form-signin" method="POST" action="/signup">
+        <header class="header1 container-fluid">
+    <h2 class="form-signin-heading">Sign up</h2>
+  {{ form.hidden_tag() }}
+  {{ wtf.form_field(form.username) }}
+  {{ wtf.form_field(form.email) }}
+  {{ wtf.form_field(form.password) }}
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    </header>
+</form>
+  </div>
+  <div class="col"></div>
+  </div>
+  </div>
+  </header>
+
+      <footer class="page-footer">
+            
+        <div class="footer-copyright text-center">© 2020 Copyright: Megawebsite.com</div>
+      </footer>
+    
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="{{url_for('.static', filename='main.js')}}"></script>
+{{super()}}
+{% endblock %}

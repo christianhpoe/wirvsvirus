@@ -1,0 +1,104 @@
+body {
+    padding: 0;
+    margin: 0;
+    background: #fff;
+  }
+  /*--- navigation bar ---*/
+  .navbar {
+    background:#fff;
+  }
+  .nav-link,
+  .navbar-brand {
+    color: #01233f;
+    cursor: pointer;
+  }
+  .nav-link {
+    color: #01233f;
+    margin-right: 1em !important;
+  }
+
+  .navbar-collapse {
+    justify-content: flex-end;
+  }
+  
+  .header {
+    /*background-image: url('images/logo_evidens.png');*/
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    max-height: 90%;
+  }
+  .overlay {
+    position: absolute;
+    min-height: 100%;
+    min-width: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .description {
+    left: 50%;
+    position: absolute;
+    top: 70%;
+    transform: translate(-50%, -55%);
+    text-align: center;
+  }
+  .description h1 {
+    color: #01233f;
+  }
+  .description p {
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1.5;
+  }
+
+  .features {
+    margin: 4em auto;
+    padding: 1em;
+    position: relative;
+  }
+  .feature-title {
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .features img {
+    -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+    margin-bottom: 16px;
+  }
+  
+  .badge-primary {
+    background-color: #01233f;
+  }
+  
+  .page-footer {
+    background-color: #222;
+    color: #ccc;
+    padding: 60px 0 30px;
+  }
+  .footer-copyright {
+    color: #666;
+    padding: 40px 0;
+  }
+  .description header {
+    padding: 0;
+    margin: 0;
+    background: #f2f6e9;
+    background-position: center;
+    position: relative;
+    border: 2px solid black;
+    padding: 10px;
+    border-radius: 20px 20px;
+  }
+
+  .evidensblau {
+    color: #01233f;
+  }
+  
+  .btn-primary {
+    background-color: #01233f;
+  }
