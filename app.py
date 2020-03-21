@@ -74,6 +74,8 @@ class CreatePageForm(FlaskForm):
     description_crisis = TextAreaField("Beschreibung Deiner Lage zu Zeiten COVID-19s", [
         DataRequired("Bitte beschreibe Deine Lage.")])
     description_rewards = TextAreaField("Beschreibung Deiner Angebote")
+    secretlng = FloatField(id="secretlng")
+    secretlat = FloatField(id="secretlat")
     submit = SubmitField('Absenden')
 
 class CreateVoucherForm(FlaskForm):
@@ -161,7 +163,7 @@ def distanceMath(lat1, lat2, lon1, lon2):
     Ort1 = (lat1, lon1)
     Ort2 = (lat2, lon2)
 
-    distance = geodesic(Ort1, Ort2).km
+    distance = round(geodesic(Ort1, Ort2).km, 2)
     return distance
 ######## Routes ##########
 @app.route("/index", methods=["GET", "POST"])
