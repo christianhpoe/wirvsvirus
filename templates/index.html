@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block body %}
 <header class="page-header header container-fluid" style="margin-bottom:-10em;">
@@ -10,7 +11,13 @@
     </div>
     </div>
     
-    
+    <div>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.location) }}
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Search Address</button>
+        </form> 
+    </div>
     <div>
         <h1 class="display-4 text-center evidensblau" style="margin-top:1em;">WirvsVirus</h1>
     </div>
@@ -26,5 +33,14 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="{{url_for('.static', filename='main.js')}}"></script>
+<script type="text/javascript">
+    function initializeAuto() {
+    var input = document.getElementById('addressfield');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1nwIzL_OeyOWWRo682BTm1DkvPnactro&libraries=places&callback=initializeAuto" async defer></script>
+
 {{super()}}
 {% endblock %}

@@ -18,6 +18,9 @@ from wtforms import validators, ValidationError
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from geopy.distance import geodesic 
+
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
@@ -134,10 +137,13 @@ def load_user(id):
 
 
 ######## Routes ##########
-@app.route("/index")
-@app.route("/")
+@app.route("/index", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
-    return render_template("index.html", title="Home")
+    form = LocationForm()
+    if form.validate_on_submit():
+        return f"<h1>{form.location.data}<h1>"
+    return render_template("index.html", title="Home", form=form)
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -217,3 +223,12 @@ def test():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+"""
+kolkata = (22.5726, 88.3639) 
+delhi = (28.7041, 77.1025) 
+  
+# Print the distance calculated in km 
+print(geodesic(kolkata, delhi).km)
+"""
+"""
