@@ -45,6 +45,10 @@ class RegisterForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField("Password", validators=[InputRequired(), Length(min=8, max=80)])
 
+class CreatePageForm(FlaskForm):
+    name = StringField("Name", validators=[InputRequired()])
+
+
 
 #### Define Database Tables #######
 class User(UserMixin, db.Model):
@@ -52,8 +56,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(120), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    Pages = db.relationship('Page', backref='creator', lazy=True)
-    Rewards = db.relationship('Reward', backref='creator', lazy=True)
+    pages = db.relationship('Page', backref='creator', lazy=True)
 
 
 
@@ -69,10 +72,39 @@ class User(UserMixin, db.Model):
 class Page(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     id = db.Column(db.Integer, primary_key=True)
+    artist_name = db.Column(db.String)
+    artist_category = db.Column(db.String)
+    artist_job = db.Column(db.String)
+
+    ####### ORT Hinzufügen #####
+    description_title = db.Column(db.String)
+    description_general = db.Column(db.String)
+    description_crisis = db.Column(db.String)
+    description_rewards = db.Column(db.String)
+
+    ##### Filepaths
+    titlepicture_path = db.Column(db.String)
+    media_path = db.Column(db.String)
+
+    rewards = db.relationship('Reward', backref='Page', lazy=True)
+
+
+
+
+
 
 class Reward(db.Model):
-    creator_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    Page_Id = db.Column(db.Integer, db.ForeignKey("page.id"))
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    description = db.Column(db.String)
+    category_form = db.Column(db.String)
+    category_time = db.Column(db.String)
+    price = db.Column(db.Float)
+    primary = db.Column(db.Boolean)
+    active = db.Column(db.Boolean)
+
+
 
 ##### Necessary WebApp Definitions ######
 @app.shell_context_processor
