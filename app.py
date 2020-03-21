@@ -13,12 +13,12 @@ from flask_fontawesome import FontAwesome
 
 from wtforms import TextAreaField, StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.fields.html5 import IntegerField
-from wtforms.validators import DataRequired, InputRequired, Email, Length
+from wtforms.validators import DataRequired, InputRequired, Email, Length, NumberRange
 from wtforms import validators, ValidationError
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from geopy.distance import geodesic 
+from geopy.distance import geodesic
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -58,20 +58,35 @@ class RegisterForm(FlaskForm):
 
 class CreatePageForm(FlaskForm):
     artist_name = StringField(
-        "Name", validators=[validators.Required("Bitte gib Deinen Namen an.")])
-    artist_category = SelectField("Kategorie", [validators.Required("Bitte wähle eine Kategorie aus.")], choices=[
+        "Name", validators=[DataRequired("Bitte gib Deinen Namen an.")])
+    artist_category = SelectField("Kategorie", [DataRequired("Bitte wähle eine Kategorie aus.")], choices=[
                                   ('Musik', 'Musik'), ('Bildende Künste', 'Bildende Künste'), ('Schauspiel', 'Schauspiel')])
     artist_job = StringField(
-        "Job", [validators.Required("Bitte gib Deinen Job an.")])
+        "Job", [DataRequired("Bitte gib Deinen Job an.")])
     artist_location = StringField(
-        "Wohnort", [validators.Required("Bitte gib Deinen Wohnort an.")])
+        "Wohnort", [DataRequired("Bitte gib Deinen Wohnort an.")])
     description_title = StringField(
-        "Titel", [validators.Required("Bitte gib einen Titel an.")])
+        "Titel", [DataRequired("Bitte gib einen Titel an.")])
     description_general = TextAreaField(
-        "Steckbrief", [validators.Required("Bitte stelle Dich kurz vor.")])
+        "Steckbrief", [DataRequired("Bitte stelle Dich kurz vor.")])
     description_crisis = TextAreaField("Beschreibung Deiner Lage zu Zeiten COVID-19s", [
-        validators.Required("Bitte beschreibe Deine Lage.")])
+        DataRequired("Bitte beschreibe Deine Lage.")])
     description_rewards = TextAreaField("Beschreibung Deiner Angebote")
+    submit = SubmitField('Absenden')
+
+class CreateVoucherForm(FlaskForm):
+    voucher_title = StringField(
+        "Titel", [DataRequired(message="Bitte gib einen Titel an.")])
+    voucher_description = StringField(
+        "Beschreibung", [DataRequired(message="Bitte gib eine Beschreibung an.")])
+    voucher_category = SelectField("Kategorie", [DataRequired(message="Bitte wähle eine Kategorie aus.")], choices=[
+                                  ('Virtuell', 'Virtuell'), ('Analog', 'Analog')])
+    voucher_time = SelectField("Wann kann der Voucher eingelöst werden?", [DataRequired(message="Bitte wähle einen Zeitraum aus.")], choices=[
+        ('ab sofort', 'ab sofort'), ('nach der Krise', 'nach der Krise')])
+    voucher_price = IntegerField(
+        "Preis (in €)", [DataRequired(message="Bitte gib einen Preis an.")])
+    voucher_number = IntegerField("Wie viele dieser Voucher willst du anbieten?", validators=[
+                                  DataRequired(message="Bitte gib eine Anzahl an."), NumberRange(min=0)])
     submit = SubmitField('Absenden')
 
 class LocationForm(FlaskForm):
@@ -220,7 +235,7 @@ def createReward(RewardId):
 
 @app.route("/test")
 def test():
-    form = CreatePageForm()
+    form = CreateVoucherForm()
     return render_template("test.html", title="test", form=form)
 
 
@@ -228,9 +243,9 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 """
-kolkata = (22.5726, 88.3639) 
-delhi = (28.7041, 77.1025) 
-  
-# Print the distance calculated in km 
+kolkata = (22.5726, 88.3639)
+delhi = (28.7041, 77.1025)
+
+# Print the distance calculated in km
 print(geodesic(kolkata, delhi).km)
 """
