@@ -7,10 +7,18 @@
   <div class="row justify-content-center">
       <div class="col-12 col-lg-8">
         <div>
-          <form action="" method="post">
-              {{ form.hidden_tag() }}
+          <form id="locationForm" action="" method="post">
+            {{ form.hidden_tag() }}
+            <div>
               {{ wtf.form_field(form.location) }}
-              <button class="btn btn-lg btn-primary btn-block" type="submit">Search Address</button>
+            </div>
+            <div style="display:none;">
+              {{ wtf.form_field(form.secretlng) }}
+            </div>
+            <div style="display:none;">
+              {{ wtf.form_field(form.secretlat) }}
+            </div>
+              <button class="btn btn-lg btn-primary btn-block" id="locationSubmit" type="submit">Search Address</button>
           </form> 
       </div>
       <div class="card-deck justify-content-center">
@@ -19,7 +27,7 @@
           <img class="card-img-top" src={{p.titlepicture_path}}>
           <div class="card-body">
             <h5 class="card-title">{{p.artist_name}}</h5>
-            <p class="card-text">{{p.artist_job}}, Ort, eventuell noch mehr Text</p>
+            <p class="card-text">{{p.artist_job}}, Ort, {{distances[p]}}</p>
             <a href="link/zur/seite" class="stretched-link"></a>
           </div>
           <div class="card-footer">
@@ -38,8 +46,13 @@
     function initializeAuto() {
     var input = document.getElementById('addressfield');
     var autocomplete = new google.maps.places.Autocomplete(input);
-    }
-
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+            document.getElementById('secretlat').value = place.geometry.location.lat();
+            document.getElementById('secretlng').value = place.geometry.location.lng();
+            $("#locationForm").submit()
+    });
+  }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1nwIzL_OeyOWWRo682BTm1DkvPnactro&libraries=places&callback=initializeAuto" async defer></script>
 

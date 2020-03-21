@@ -1,5 +1,7 @@
 import csv
 import os
+import math
+
 from docxtpl import DocxTemplate
 from datetime import date
 
@@ -11,7 +13,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_fontawesome import FontAwesome
 
-from wtforms import TextAreaField, StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms import TextAreaField, StringField, PasswordField, BooleanField, SubmitField, SelectField, FloatField
 from wtforms.fields.html5 import IntegerField
 from wtforms.validators import DataRequired, InputRequired, Email, Length
 from wtforms import validators, ValidationError
@@ -76,6 +78,8 @@ class CreatePageForm(FlaskForm):
 
 class LocationForm(FlaskForm):
     location = StringField(id="addressfield")
+    secretlng = FloatField(id="secretlng")
+    secretlat = FloatField(id="secretlat")
 
 #### Define Database Tables #######
 class User(UserMixin, db.Model):
@@ -101,8 +105,8 @@ class Page(db.Model):
     artist_name = db.Column(db.String)
     artist_category = db.Column(db.String)
     artist_job = db.Column(db.String)
-    artist_location_lat = db.Column(db.Integer)
-    artist_location_long = db.Column(db.Integer)
+    artist_location_lat = db.Column(db.Float)
+    artist_location_long = db.Column(db.Float)
 
     description_title = db.Column(db.String)
     description_general = db.Column(db.String)
@@ -138,7 +142,12 @@ def make_shell_context():
 def load_user(id):
     return User.query.get(int(id))
 
+def distanceMath(lat1, lat2, lon1, lon2):
+    Ort1 = (lat1, lon1)
+    Ort2 = (lat2, lon2)
 
+    distance = geodesic(Ort1, Ort2).km
+    return distance
 ######## Routes ##########
 @app.route("/index", methods=["GET", "POST"])
 @app.route("/", methods=["GET", "POST"])
@@ -203,10 +212,15 @@ def deletePage():
 @app.route("/listPages", methods=['GET', 'POST'])
 def listPages():
     form = LocationForm()
+    distances = {}
     if form.validate_on_submit():
-        return f"<h1>{form.location.data}<h1>"
-    pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path).filter(Page.creator_id == User.id)
-    return render_template("listPages.html", title="Übersicht", pages=pages, form=form)
+        pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long).filter(Page.creator_id == User.id)       
+        distances = {}
+        for page in pages:
+            distances[page] = distanceMath(form.secretlat.data, page.artist_location_lat, form.secretlng.data, page.artist_location_long)
+        return render_template("listPages.html", title="Übersicht", pages=pages, form=form, distances=distances)
+    pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long).filter(Page.creator_id == User.id)
+    return render_template("listPages.html", title="Übersicht", pages=pages, form=form, distances=distances)
 
 @app.route("/<string:PageTitle>")
 def pageTitle(PageTitle):
@@ -227,10 +241,3 @@ def test():
 if __name__ == "__main__":
     app.run(debug=True)
 
-"""
-kolkata = (22.5726, 88.3639) 
-delhi = (28.7041, 77.1025) 
-  
-# Print the distance calculated in km 
-print(geodesic(kolkata, delhi).km)
-"""
