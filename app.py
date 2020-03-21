@@ -99,7 +99,8 @@ class Page(db.Model):
     artist_name = db.Column(db.String)
     artist_category = db.Column(db.String)
     artist_job = db.Column(db.String)
-    artist_location = db.Column(db.String)
+    artist_location_lat = db.Column(db.Integer)
+    artist_location_long = db.Column(db.Integer)
 
     description_title = db.Column(db.String)
     description_general = db.Column(db.String)
