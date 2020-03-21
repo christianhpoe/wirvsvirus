@@ -1,9 +1,18 @@
 {% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
 {% block body %}
 
 <div class="container-fluid my-3">
   <div class="row justify-content-center">
-    <div class="col-12 col-lg-8">
+      <div class="col-12 col-lg-8">
+        <div>
+          <form action="" method="post">
+              {{ form.hidden_tag() }}
+              {{ wtf.form_field(form.location) }}
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Search Address</button>
+          </form> 
+      </div>
       <div class="card-deck justify-content-center">
         {% for p in pages %}
         <div class="card mb-3" style="min-width:250px; max-width:250px;">
@@ -23,4 +32,16 @@
   </div>
 </div>
 
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    function initializeAuto() {
+    var input = document.getElementById('addressfield');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1nwIzL_OeyOWWRo682BTm1DkvPnactro&libraries=places&callback=initializeAuto" async defer></script>
+
+{{super()}}
 {% endblock %}

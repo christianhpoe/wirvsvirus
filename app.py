@@ -200,10 +200,13 @@ def createPage():
 def deletePage():
     return "<h1>In Process<h1>"
 
-@app.route("/listPages")
+@app.route("/listPages", methods=['GET', 'POST'])
 def listPages():
+    form = LocationForm()
+    if form.validate_on_submit():
+        return f"<h1>{form.location.data}<h1>"
     pages = [None]*13 # database query goes here
-    return render_template("listPages.html", title="Übersicht", pages=pages)
+    return render_template("listPages.html", title="Übersicht", pages=pages, form=form)
 
 @app.route("/<string:PageTitle>")
 def pageTitle(PageTitle):
