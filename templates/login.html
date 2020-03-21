@@ -10,9 +10,9 @@
       <header class="header1 container-fluid">
       <h2 class="form-signin-heading">Please sign in</h2>
   {{ form.hidden_tag() }}
-  {{ wtf.form_field(form.username) }}
+  {{ wtf.form_field(form.email) }}
   {{ wtf.form_field(form.password) }}
-  {{ wtf.form_field(form.remember) }}
+  {{ wtf.form_field(form.remember_me) }}
   <p class="Signupsentence">Don't have an account?  <a href="{{ url_for('signup') }}">Sign up</a></p>
   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </header>

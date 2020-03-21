@@ -49,6 +49,7 @@ class RegisterForm(FlaskForm):
 #### Define Database Tables #######
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(120), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     Pages = db.relationship('Page', backref='creator', lazy=True)
@@ -96,7 +97,7 @@ def signup():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method="sha256")
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        new_user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
