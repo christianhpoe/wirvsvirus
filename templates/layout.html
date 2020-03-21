@@ -16,6 +16,9 @@
     </button>
     <div class="collapse navbar-collapse" id="main-navigation">
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link h4" href="{{ url_for('listPages') }}">Fundings</a>
+        </li>
         {% if current_user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link h4" href="{{ url_for('logout') }}">Logout</a>
