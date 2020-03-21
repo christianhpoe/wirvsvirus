@@ -11,10 +11,10 @@ from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_fontawesome import FontAwesome
 
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms import TextAreaField, StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.fields.html5 import IntegerField
 from wtforms.validators import DataRequired, InputRequired, Email, Length
-
+from wtforms import validators, ValidationError
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -22,7 +22,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'short-term-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'mydatabase.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
+    os.path.join(basedir, 'mydatabase.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 bootstrap = Bootstrap(app)
@@ -35,19 +36,40 @@ fa = FontAwesome(app)
 
 ##### Define Forms #######
 class LoginForm(FlaskForm):
-    email = StringField("Email-Adresse", validators=[DataRequired()], id="id_email")
-    password = PasswordField('Passwort', validators=[DataRequired()], id="id_password")
+    email = StringField(
+        "Email-Adresse", validators=[DataRequired()], id="id_email")
+    password = PasswordField('Passwort', validators=[
+                             DataRequired()], id="id_password")
     remember_me = BooleanField('Angemeldet bleiben', id="id_remember")
     submit = SubmitField('Anmelden')
 
+
 class RegisterForm(FlaskForm):
-    email = StringField("Email", validators=[InputRequired(), Email(message="Invalid email"), Length(max=50)])
-    username = StringField("Username", validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField("Password", validators=[InputRequired(), Length(min=8, max=80)])
+    email = StringField("Email", validators=[InputRequired(), Email(
+        message="Invalid email"), Length(max=50)])
+    username = StringField("Username", validators=[
+                           InputRequired(), Length(min=4, max=15)])
+    password = PasswordField("Password", validators=[
+                             InputRequired(), Length(min=8, max=80)])
+
 
 class CreatePageForm(FlaskForm):
-    name = StringField("Name", validators=[InputRequired()])
-
+    artist_name = StringField(
+        "Name", validators=[validators.Required("Bitte gib Deinen Namen an.")])
+    artist_category = SelectField("Kategorie", [validators.Required("Bitte wähle eine Kategorie aus.")], choices=[
+                                  ('Musik', 'Musik'), ('Bildende Künste', 'Bildende Künste'), ('Schauspiel', 'Schauspiel')])
+    artist_job = StringField(
+        "Job", [validators.Required("Bitte gib Deinen Job an.")])
+    artist_location = StringField(
+        "Wohnort", [validators.Required("Bitte gib Deinen Wohnort an.")])
+    description_title = StringField(
+        "Titel", [validators.Required("Bitte gib einen Titel an.")])
+    description_general = TextAreaField(
+        "Steckbrief", [validators.Required("Bitte stelle Dich kurz vor.")])
+    description_crisis = TextAreaField("Beschreibung Deiner Lage zu Zeiten COVID-19s", [
+        validators.Required("Bitte beschreibe Deine Lage.")])
+    description_rewards = TextAreaField("Beschreibung Deiner Angebote")
+    submit = SubmitField('Absenden')
 
 
 #### Define Database Tables #######
@@ -58,16 +80,15 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     pages = db.relationship('Page', backref='creator', lazy=True)
 
-
-
     def __repr__(self):
-        return '<User {}>'.format(self.email) 
+        return '<User {}>'.format(self.email)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
 
 class Page(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -76,20 +97,17 @@ class Page(db.Model):
     artist_category = db.Column(db.String)
     artist_job = db.Column(db.String)
     artist_location = db.Column(db.String)
-    
+
     description_title = db.Column(db.String)
     description_general = db.Column(db.String)
     description_crisis = db.Column(db.String)
     description_rewards = db.Column(db.String)
 
-    ##### Filepaths
+    # Filepaths
     titlepicture_path = db.Column(db.String)
     media_path = db.Column(db.String)
 
     rewards = db.relationship('Reward', backref='Page', lazy=True)
-
-
-
 
 
 class Reward(db.Model):
@@ -104,16 +122,15 @@ class Reward(db.Model):
     active = db.Column(db.Boolean)
 
 
-
 ##### Necessary WebApp Definitions ######
 @app.shell_context_processor
 def make_shell_context():
-    return {'db': db, 'User': User, 'Page': Page, 'Reward':Reward}
+    return {'db': db, 'User': User, 'Page': Page, 'Reward': Reward}
+
 
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
-
 
 
 ######## Routes ##########
@@ -127,15 +144,17 @@ def index():
 def signup():
     form = RegisterForm()
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method="sha256")
-        new_user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
+        hashed_password = generate_password_hash(
+            form.password.data, method="sha256")
+        new_user = User(username=form.username.data,
+                        email=form.email.data, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
         return redirect(url_for("index"))
 
-
     return render_template("signup.html", form=form)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -160,24 +179,34 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+
 @app.route("/createPage", methods=['GET', 'POST'])
 @login_required
 def createPage():
     return "<h1>In Process<h1>"
+
 
 @app.route("/deletePage", methods=['GET', 'POST'])
 @login_required
 def deletePage():
     return "<h1>In Process<h1>"
 
+
 @app.route("/<string:PageTitle>")
 def pageTitle(PageTitle):
     return "<h1>In Process<h1>"
+
 
 @app.route("/createReward/<int:RewardId>", methods=['GET', 'POST'])
 def createReward(RewardId):
     return "<h1>In Process<h1>"
 
+
+@app.route("/test")
+def test():
+    form = CreatePageForm()
+    return render_template("test.html", title="test", form=form)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
-
