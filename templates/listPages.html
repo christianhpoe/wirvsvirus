@@ -18,8 +18,8 @@
         <div class="card mb-3" style="min-width:250px; max-width:250px;">
           <img class="card-img-top" src={{ url_for(".static", filename="images/image.jpg") }}>
           <div class="card-body">
-            <h5 class="card-title">Name</h5>
-            <p class="card-text">Beruf, Ort, eventuell noch mehr Text</p>
+            <h5 class="card-title">{{p.artist_name}}</h5>
+            <p class="card-text">{{p.artist_job}}, Ort, eventuell noch mehr Text</p>
             <a href="link/zur/seite" class="stretched-link"></a>
           </div>
           <div class="card-footer">

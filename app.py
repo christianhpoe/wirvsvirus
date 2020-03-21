@@ -205,7 +205,7 @@ def listPages():
     form = LocationForm()
     if form.validate_on_submit():
         return f"<h1>{form.location.data}<h1>"
-    pages = [None]*13 # database query goes here
+    pages = db.session.query(Page.artist_name, Page.artist_job).filter(Page.creator_id == User.id)
     return render_template("listPages.html", title="Übersicht", pages=pages, form=form)
 
 @app.route("/<string:PageTitle>")
