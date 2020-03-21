@@ -75,8 +75,8 @@ class Page(db.Model):
     artist_name = db.Column(db.String)
     artist_category = db.Column(db.String)
     artist_job = db.Column(db.String)
-
-    ####### ORT Hinzufügen #####
+    artist_location = db.Column(db.String)
+    
     description_title = db.Column(db.String)
     description_general = db.Column(db.String)
     description_crisis = db.Column(db.String)
@@ -87,7 +87,6 @@ class Page(db.Model):
     media_path = db.Column(db.String)
 
     rewards = db.relationship('Reward', backref='Page', lazy=True)
-
 
 
 
