@@ -16,7 +16,7 @@
       <div class="card-deck justify-content-center">
         {% for p in pages %}
         <div class="card mb-3" style="min-width:250px; max-width:250px;">
-          <img class="card-img-top" src={{ url_for(".static", filename="images/image.jpg") }}>
+          <img class="card-img-top" src={{p.titlepicture_path}}>
           <div class="card-body">
             <h5 class="card-title">{{p.artist_name}}</h5>
             <p class="card-text">{{p.artist_job}}, Ort, eventuell noch mehr Text</p>
