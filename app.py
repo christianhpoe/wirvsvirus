@@ -74,6 +74,8 @@ class CreatePageForm(FlaskForm):
     description_rewards = TextAreaField("Beschreibung Deiner Angebote")
     submit = SubmitField('Absenden')
 
+class LocationForm(FlaskForm):
+    location = StringField(id="addressfield")
 
 #### Define Database Tables #######
 class User(UserMixin, db.Model):
@@ -200,7 +202,7 @@ def deletePage():
 
 @app.route("/listPages")
 def listPages():
-    pages = [None]*13  # database query goes here
+    pages = [None]*13 # database query goes here
     return render_template("listPages.html", title="Übersicht", pages=pages)
 
 @app.route("/<string:PageTitle>")
@@ -213,7 +215,6 @@ def createReward(RewardId):
     return "<h1>In Process<h1>"
 
 
-# to be deleted!
 @app.route("/test")
 def test():
     form = CreatePageForm()
