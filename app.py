@@ -170,6 +170,11 @@ def createPage():
 def deletePage():
     return "<h1>In Process<h1>"
 
+@app.route("/listPages")
+def listPages():
+    pages = [None]*13 # database query goes here
+    return render_template("listPages.html", title="Übersicht", pages=pages)
+
 @app.route("/<string:PageTitle>")
 def pageTitle(PageTitle):
     return "<h1>In Process<h1>"
