@@ -78,18 +78,18 @@ class CreatePageForm(FlaskForm):
     artist_location_lat = FloatField(id="secretlat")
     submit = SubmitField('Absenden')
 
-class CreateVoucherForm(FlaskForm):
-    voucher_title = StringField(
+class CreateRewardForm(FlaskForm):
+    title = StringField(
         "Titel", [DataRequired(message="Bitte gib einen Titel an.")])
-    voucher_description = StringField(
+    description = StringField(
         "Beschreibung", [DataRequired(message="Bitte gib eine Beschreibung an.")])
-    voucher_category = SelectField("Kategorie", [DataRequired(message="Bitte wähle eine Kategorie aus.")], choices=[
+    category_form = SelectField("Kategorie", [DataRequired(message="Bitte wähle eine Kategorie aus.")], choices=[
                                   ('Virtuell', 'Virtuell'), ('Analog', 'Analog')])
-    voucher_time = SelectField("Wann kann der Voucher eingelöst werden?", [DataRequired(message="Bitte wähle einen Zeitraum aus.")], choices=[
+    category_time = SelectField("Wann kann der Voucher eingelöst werden?", [DataRequired(message="Bitte wähle einen Zeitraum aus.")], choices=[
         ('ab sofort', 'ab sofort'), ('nach der Krise', 'nach der Krise')])
-    voucher_price = IntegerField(
+    price = IntegerField(
         "Preis (in €)", [DataRequired(message="Bitte gib einen Preis an.")])
-    voucher_number = IntegerField("Wie viele dieser Voucher willst du anbieten?", validators=[
+    number = IntegerField("Wie viele dieser Voucher willst du anbieten?", validators=[
                                   DataRequired(message="Bitte gib eine Anzahl an."), NumberRange(min=0)])
     submit = SubmitField('Absenden')
 
@@ -226,7 +226,6 @@ def createPage():
       form.populate_obj(page)
       page.creator_id = current_user.id
       
-      print("adding ", page)
       db.session.add(page)
       db.session.commit()
       return redirect(url_for('index'))
@@ -236,9 +235,19 @@ def createPage():
 @app.route("/createRewards/<int:pageId>", methods=['GET', 'POST'])
 @login_required
 def createRewards(pageId):
-  form = CreateVoucherForm()
-
-  return render_template("createRewards.html", title="Angebote erstellen", form=form)
+    rewards = Reward.query.filter_by(Page_Id=pageId)
+    form = CreateRewardForm()
+    
+    if form.validate_on_submit():
+        r = Reward()
+        form.populate_obj(r)
+        r.Page_Id = pageId
+        
+        db.session.add(r)
+        db.session.commit()
+        return render_template("createRewards.html", title="Angebote erstellen", form=form, rewards=rewards)
+        
+    return render_template("createRewards.html", title="Angebote erstellen", form=form, rewards=rewards)
 
 
 @app.route("/deletePage", methods=['GET', 'POST'])
