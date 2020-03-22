@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container-fluid my-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-6">
+      <div class="text-right">
+        <h1 class="display-4">Erstelle dein Künstlerprofil</h1>
+      </div>
+      
+      <form id="createPageForm" action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ form.artist_name.label }}
+          {{ form.artist_name(class="form-control") }}
+        </div>
+        <div class="form-row">
+          <div class="form-group col-8">
+            {{ form.artist_job.label }}
+            {{ form.artist_job(class="form-control") }}
+          </div>
+          <div class="form-group col-4">
+            {{ form.artist_category.label }}
+            {{ form.artist_category(class="form-control") }}
+          </div>
+        </div>
+        
+        <!-- hier google maps javascript zeug machen -->
+        <div class="form-group">
+          {{ form.artist_location.label }}
+          {{ form.artist_location(class="form-control") }}
+        </div>
+        
+        <div style="display:none;">
+          {{ form.secretlng(id="secretLngField") }}
+          {{ form.secretlat(id="secretLatField") }}
+        </div>
+        <!--   -->
+        
+        <div class="form-group">
+          {{ form.description_title.label }}
+          {{ form.description_title(class="form-control") }}
+        </div>
+        <div class="form-group">
+          {{ form.description_general.label }}
+          {{ form.description_general(class="form-control") }}
+        </div>
+        <div class="form-group">
+          {{ form.description_crisis.label }}
+          {{ form.description_crisis(class="form-control") }}
+        </div>
+        <div class="form-group">
+          {{ form.description_rewards.label }}
+          {{ form.description_rewards(class="form-control") }}
+        </div>
+        
+        <div class="text-center">
+          {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+artist_name = StringField(
+        "Name", validators=[DataRequired("Bitte gib Deinen Namen an.")])
+    artist_category = SelectField("Kategorie", [DataRequired("Bitte wähle eine Kategorie aus.")], choices=[
+                                  ('Musik', 'Musik'), ('Bildende Künste', 'Bildende Künste'), ('Schauspiel', 'Schauspiel')])
+    artist_job = StringField(
+        "Job", [DataRequired("Bitte gib Deinen Job an.")])
+    artist_location = StringField(
+        "Wohnort", [DataRequired("Bitte gib Deinen Wohnort an.")])
+    description_title = StringField(
+        "Titel", [DataRequired("Bitte gib einen Titel an.")])
+    description_general = TextAreaField(
+        "Steckbrief", [DataRequired("Bitte stelle Dich kurz vor.")])
+    description_crisis = TextAreaField("Beschreibung Deiner Lage zu Zeiten COVID-19s", [
+        DataRequired("Bitte beschreibe Deine Lage.")])
+    description_rewards = TextAreaField("Beschreibung Deiner Angebote")
+    secretlng = FloatField(id="secretlng")
+    secretlat = FloatField(id="secretlat")
+    submit = SubmitField('Absenden')
