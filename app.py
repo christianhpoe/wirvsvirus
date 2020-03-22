@@ -219,8 +219,8 @@ def logout():
 @app.route("/createPage", methods=['GET', 'POST'])
 @login_required
 def createPage():
-    return "<h1>In Process<h1>"
-
+    form = CreatePageForm()
+    return render_template("createPage.html", title="Seite erstellen", form=form)
 
 @app.route("/deletePage", methods=['GET', 'POST'])
 @login_required
