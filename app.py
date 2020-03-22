@@ -233,6 +233,14 @@ def createPage():
     
     return render_template("createPage.html", title="Seite erstellen", form=form)
 
+@app.route("/createRewards/<int:pageId>", methods=['GET', 'POST'])
+@login_required
+def createRewards(pageId):
+  form = CreateVoucherForm()
+
+  return render_template("createRewards.html", title="Angebote erstellen", form=form)
+
+
 @app.route("/deletePage", methods=['GET', 'POST'])
 @login_required
 def deletePage():
@@ -269,11 +277,6 @@ def page(PageId):
 
 
     return render_template("page.html", title=f"{pageName}", page=page, rewards=rewards)
-
-
-@app.route("/createReward/<int:RewardId>", methods=['GET', 'POST'])
-def createReward(RewardId):
-    return "<h1>In Process<h1>"
 
 
 @app.route("/test")

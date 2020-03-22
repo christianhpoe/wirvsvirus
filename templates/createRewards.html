@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container-fluid my-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-6">
+      <div class="text-right">
+        <h1 class="display-4">Erstelle deine Angebote</h1>
+      </div>
+      
+      
+      
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+voucher_title = StringField(
+        "Titel", [DataRequired(message="Bitte gib einen Titel an.")])
+    voucher_description = StringField(
+        "Beschreibung", [DataRequired(message="Bitte gib eine Beschreibung an.")])
+    voucher_category = SelectField("Kategorie", [DataRequired(message="Bitte wähle eine Kategorie aus.")], choices=[
+                                  ('Virtuell', 'Virtuell'), ('Analog', 'Analog')])
+    voucher_time = SelectField("Wann kann der Voucher eingelöst werden?", [DataRequired(message="Bitte wähle einen Zeitraum aus.")], choices=[
+        ('ab sofort', 'ab sofort'), ('nach der Krise', 'nach der Krise')])
+    voucher_price = IntegerField(
+        "Preis (in €)", [DataRequired(message="Bitte gib einen Preis an.")])
+    voucher_number = IntegerField("Wie viele dieser Voucher willst du anbieten?", validators=[
+                                  DataRequired(message="Bitte gib eine Anzahl an."), NumberRange(min=0)])
+    submit = SubmitField('Absenden')
