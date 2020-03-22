@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block body %}
+<header class="page-header header container-fluid">
+  <div class="container-fluid" style="margin-top:10em;">
+  <div class="row">
+  
+  <div class="col col-sm-4">
+        <img src="/static/images/image.jpg" alt="">
+  </div>
+  <div class="col col-sm-8">
+    <h1>{{page.artist_name}}</h1>
+    <h1>{{page.artist_category}}</h1>
+    <h1>{{page.artist_job}}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-sm-12">
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Allgemeine Beschreibung
+                </button>
+                </h2>
+            </div>
+        
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    {{page.description_general}}
+                </div>
+            </div>
+            </div>
+            <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Krisenbeschreibung
+                </button>
+                </h2>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    {{page.description_crisis}}
+                </div>
+            </div>
+            </div>
+            <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Beschreibung der Belohnungen
+                </button>
+                </h2>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    {{page.description_rewards}}
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card-deck justify-content-center">
+            {% for r in rewards %}
+            <div class="card mb-3" style="min-width:250px; max-width:250px;">
+            <div class="card-body">
+                <h5 class="card-title">{{r.title}}</h5>
+                <p class="card-text">{{r.description}}</p>
+                <a href="link/zum/Kaufen" class="stretched-link"></a>
+            </div>
+            <div class="card-footer">
+                <strong>{{r.price}}€</strong> Jetzt Kaufen
+            </div>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+  </header>
+    
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="{{url_for('.static', filename='main.js')}}"></script>
+{{super()}}
+{% endblock %}
