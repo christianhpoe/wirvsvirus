@@ -25,12 +25,14 @@ from geopy.distance import geodesic
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_FOLDER = "./uploads"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'short-term-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
     os.path.join(basedir, 'mydatabase.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
@@ -66,7 +68,7 @@ class CreatePageForm(FlaskForm):
                                   ('Musik', 'Musik'), ('Bildende Künste', 'Bildende Künste'), ('Schauspiel', 'Schauspiel')])
     artist_job = StringField(
         "Job", [DataRequired("Bitte gib Deinen Job an.")])
-    titlepicture_path = FileField("Profilbild",validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Nur Bilder bitte!')])
+    titlepicture_path = FileField("Profilbild")
     artist_location = StringField(
         "Wohnort", [DataRequired("Bitte gib Deinen Wohnort an.")], id="addressfield")
     description_title = StringField(
@@ -224,8 +226,15 @@ def createPage():
     form = CreatePageForm()
     
     if form.validate_on_submit():
+      f = form.titlepicture_path.data
+      filename = f.filename
+      f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
       page = Page()
       form.populate_obj(page)
+
+      page.titlepicture_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
       page.creator_id = current_user.id
       
       db.session.add(page)
