@@ -269,9 +269,14 @@ def listPages():
     pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long)
     return render_template("listPages.html", title="Übersicht", distances=pages, form=form)
 
-@app.route("/<string:PageTitle>")
-def pageTitle(PageTitle):
-    return "<h1>In Process<h1>"
+@app.route("/page/<int:PageId>")
+def page(PageId):
+    pageName = "Test"
+    page = Page.query.filter_by(id = PageId).first()
+    rewards = Reward.query.filter(Reward.Page_Id == PageId).order_by(Reward.price.asc())
+
+
+    return render_template("page.html", title=f"{pageName}", page=page, rewards=rewards)
 
 
 @app.route("/test")
