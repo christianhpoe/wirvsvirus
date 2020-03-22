@@ -32,8 +32,8 @@
         </div>
         
         <div style="display:none;">
-          {{ form.secretlng(id="secretLngField") }}
-          {{ form.secretlat(id="secretLatField") }}
+          {{ form.artist_location_long() }}
+          {{ form.artist_location_lat() }}
         </div>
         <!--   -->
         
@@ -63,21 +63,19 @@
 
 {% endblock %}
 
-artist_name = StringField(
-        "Name", validators=[DataRequired("Bitte gib Deinen Namen an.")])
-    artist_category = SelectField("Kategorie", [DataRequired("Bitte wähle eine Kategorie aus.")], choices=[
-                                  ('Musik', 'Musik'), ('Bildende Künste', 'Bildende Künste'), ('Schauspiel', 'Schauspiel')])
-    artist_job = StringField(
-        "Job", [DataRequired("Bitte gib Deinen Job an.")])
-    artist_location = StringField(
-        "Wohnort", [DataRequired("Bitte gib Deinen Wohnort an.")])
-    description_title = StringField(
-        "Titel", [DataRequired("Bitte gib einen Titel an.")])
-    description_general = TextAreaField(
-        "Steckbrief", [DataRequired("Bitte stelle Dich kurz vor.")])
-    description_crisis = TextAreaField("Beschreibung Deiner Lage zu Zeiten COVID-19s", [
-        DataRequired("Bitte beschreibe Deine Lage.")])
-    description_rewards = TextAreaField("Beschreibung Deiner Angebote")
-    secretlng = FloatField(id="secretlng")
-    secretlat = FloatField(id="secretlat")
-    submit = SubmitField('Absenden')
+{% block scripts %}
+<script type="text/javascript">
+    function initializeAuto() {
+    var input = document.getElementById('addressfield');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+            document.getElementById('secretlat').value = place.geometry.location.lat();
+            document.getElementById('secretlng').value = place.geometry.location.lng();
+    });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1nwIzL_OeyOWWRo682BTm1DkvPnactro&libraries=places&callback=initializeAuto" async defer></script>
+
+{{super()}}
+{% endblock %}

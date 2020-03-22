@@ -66,7 +66,7 @@ class CreatePageForm(FlaskForm):
     artist_job = StringField(
         "Job", [DataRequired("Bitte gib Deinen Job an.")])
     artist_location = StringField(
-        "Wohnort", [DataRequired("Bitte gib Deinen Wohnort an.")])
+        "Wohnort", [DataRequired("Bitte gib Deinen Wohnort an.")], id="addressfield")
     description_title = StringField(
         "Titel", [DataRequired("Bitte gib einen Titel an.")])
     description_general = TextAreaField(
@@ -74,8 +74,8 @@ class CreatePageForm(FlaskForm):
     description_crisis = TextAreaField("Beschreibung Deiner Lage zu Zeiten COVID-19s", [
         DataRequired("Bitte beschreibe Deine Lage.")])
     description_rewards = TextAreaField("Beschreibung Deiner Angebote")
-    secretlng = FloatField(id="secretlng")
-    secretlat = FloatField(id="secretlat")
+    artist_location_long = FloatField(id="secretlng")
+    artist_location_lat = FloatField(id="secretlat")
     submit = SubmitField('Absenden')
 
 class CreateVoucherForm(FlaskForm):
