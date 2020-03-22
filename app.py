@@ -17,6 +17,7 @@ from wtforms import TextAreaField, StringField, PasswordField, BooleanField, Sub
 from wtforms.fields.html5 import IntegerField
 from wtforms.validators import DataRequired, InputRequired, Email, Length, NumberRange
 from wtforms import validators, ValidationError
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -65,6 +66,7 @@ class CreatePageForm(FlaskForm):
                                   ('Musik', 'Musik'), ('Bildende Künste', 'Bildende Künste'), ('Schauspiel', 'Schauspiel')])
     artist_job = StringField(
         "Job", [DataRequired("Bitte gib Deinen Job an.")])
+    titlepicture_path = FileField("Profilbild",validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Nur Bilder bitte!')])
     artist_location = StringField(
         "Wohnort", [DataRequired("Bitte gib Deinen Wohnort an.")], id="addressfield")
     description_title = StringField(
