@@ -8,7 +8,7 @@
         <h1 class="display-4">Erstelle dein Künstlerprofil</h1>
       </div>
       
-      <form id="createPageForm" action="" method="post">
+      <form id="createPageForm" action="" method="post" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="form-group">
           {{ form.artist_name.label }}

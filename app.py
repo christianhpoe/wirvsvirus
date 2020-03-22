@@ -20,6 +20,7 @@ from wtforms import validators, ValidationError
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.datastructures import CombinedMultiDict
 
 from geopy.distance import geodesic
 
@@ -223,9 +224,10 @@ def logout():
 @app.route("/createPage", methods=['GET', 'POST'])
 @login_required
 def createPage():
-    form = CreatePageForm()
+    form = CreatePageForm(CombinedMultiDict((request.files, request.form)))
     
     if form.validate_on_submit():
+      print(form.titlepicture_path)
       f = form.titlepicture_path.data
       filename = f.filename
       f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
