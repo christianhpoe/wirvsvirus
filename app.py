@@ -171,14 +171,6 @@ def distanceMath(lat1, lat2, lon1, lon2):
     distance = round(geodesic(Ort1, Ort2).km, 2)
     return distance
 ######## Routes ##########
-@app.route("/index", methods=["GET", "POST"])
-@app.route("/", methods=["GET", "POST"])
-def index():
-    form = LocationForm()
-    if form.validate_on_submit():
-        return f"<h1>{form.location.data}<h1>"
-    return render_template("index.html", title="Home", form=form)
-
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -268,6 +260,8 @@ def createRewards(pageId):
 def deletePage():
     return "<h1>In Process<h1>"
 
+@app.route("/index", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 @app.route("/listPages", methods=['GET', 'POST'])
 def listPages():
     form = LocationForm()
