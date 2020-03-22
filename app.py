@@ -26,7 +26,7 @@ from geopy.distance import geodesic
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-UPLOAD_FOLDER = "./uploads"
+UPLOAD_FOLDER = "./static/uploads"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'short-term-key'
@@ -184,7 +184,7 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("index"))
+        return redirect(url_for("listPages"))
 
     return render_template("signup.html", form=form)
 
@@ -192,7 +192,7 @@ def signup():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("index"))
+        return redirect(url_for("listPages"))
 
     form = LoginForm()
 
@@ -202,7 +202,7 @@ def login():
             return render_template("login.html", title="Anmelden", form=form)
 
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
+        return redirect(url_for('listPages'))
 
     return render_template("login.html", title="Anmelden", form=form)
 
@@ -234,8 +234,8 @@ def createPage():
       db.session.add(page)
       db.session.commit()
 
-      id_for_rewards = Page.query.filter_by(description_general=page.description_general)
-      return redirect(url_for('createReward', pageId=id_for_rewards.id))
+      id_for_rewards = Page.query.filter_by(description_general=page.description_general).first()
+      return redirect(url_for('createRewards', pageId=id_for_rewards.id))
     
     return render_template("createPage.html", title="Seite erstellen", form=form)
 
@@ -304,5 +304,5 @@ def test():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="192.168.1.94")
 
