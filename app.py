@@ -253,12 +253,12 @@ def listPages():
     if form.validate_on_submit():
         distances = {}
         if form.categories.data == "Alle":
-            pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long)
+            pages = db.session.query(Page.id, Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long)
             for page in pages:
                 distances[page] = distanceMath(form.secretlat.data, page.artist_location_lat, form.secretlng.data, page.artist_location_long)
                 distances_sorted = {k: v for k, v in sorted(distances.items(), key=lambda x: x[1])}
         else:
-            pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long).filter(Page.artist_category == form.categories.data)
+            pages = db.session.query(Page.id, Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long).filter(Page.artist_category == form.categories.data)
             for page in pages:
                 distances[page] = distanceMath(form.secretlat.data, page.artist_location_lat, form.secretlng.data, page.artist_location_long)    
                 distances_sorted = {k: v for k, v in sorted(distances.items(), key=lambda x: x[1])}
@@ -266,7 +266,7 @@ def listPages():
         
         
         return render_template("listPages.html", title="Übersicht", distances=distances_sorted, form=form)
-    pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long)
+    pages = db.session.query(Page.id, Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long)
     return render_template("listPages.html", title="Übersicht", distances=pages, form=form)
 
 @app.route("/page/<int:PageId>")

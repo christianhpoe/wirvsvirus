@@ -31,7 +31,7 @@
           <div class="card-body">
             <h5 class="card-title">{{p.artist_name}}</h5>
             <p class="card-text">{{p.artist_job}}, Ort, {{distances[p]}}km</p>
-            <a href="link/zur/seite" class="stretched-link"></a>
+            <a href="{{url_for("page", PageId=p.id) }}" class="stretched-link"></a>
           </div>
           <div class="card-footer">
             <strong>10€:</strong> Dankeschön-Postkarte
