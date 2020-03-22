@@ -220,6 +220,17 @@ def logout():
 @login_required
 def createPage():
     form = CreatePageForm()
+    
+    if form.validate_on_submit():
+      page = Page()
+      form.populate_obj(page)
+      page.creator_id = current_user.id
+      
+      print("adding ", page)
+      db.session.add(page)
+      db.session.commit()
+      return redirect(url_for('index'))
+    
     return render_template("createPage.html", title="Seite erstellen", form=form)
 
 @app.route("/deletePage", methods=['GET', 'POST'])

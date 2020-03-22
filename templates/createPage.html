@@ -30,6 +30,11 @@
           {{ form.artist_location.label }}
           {{ form.artist_location(class="form-control") }}
         </div>
+        
+        <div style="display:none;">
+          {{ form.secretlng(id="secretLngField") }}
+          {{ form.secretlat(id="secretLatField") }}
+        </div>
         <!--   -->
         
         <div class="form-group">
@@ -47,6 +52,10 @@
         <div class="form-group">
           {{ form.description_rewards.label }}
           {{ form.description_rewards(class="form-control") }}
+        </div>
+        
+        <div class="text-center">
+          {{ form.submit(class="btn btn-primary") }}
         </div>
     </div>
   </div>
