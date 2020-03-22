@@ -239,7 +239,9 @@ def createPage():
       
       db.session.add(page)
       db.session.commit()
-      return redirect(url_for('index'))
+
+      id_for_rewards = Page.query.filter_by(description_general=page.description_general)
+      return redirect(url_for('createReward', pageId=id_for_rewards.id))
     
     return render_template("createPage.html", title="Seite erstellen", form=form)
 
