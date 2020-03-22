@@ -18,11 +18,14 @@
             <div style="display:none;">
               {{ wtf.form_field(form.secretlat) }}
             </div>
-              <button class="btn btn-lg btn-primary btn-block" id="locationSubmit" type="submit">Search Address</button>
-          </form> 
+            <div>
+              {{ wtf.form_field(form.categories) }}
+            </div>
+              <button class="btn btn-lg btn-primary btn-block" id="locationSubmit" type="submit">Search</button>
+            </form> 
       </div>
       <div class="card-deck justify-content-center">
-        {% for p in pages %}
+        {% for p in distances %}
         <div class="card mb-3" style="min-width:250px; max-width:250px;">
           <img class="card-img-top" src={{p.titlepicture_path}}>
           <div class="card-body">

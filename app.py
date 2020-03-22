@@ -97,6 +97,7 @@ class LocationForm(FlaskForm):
     location = StringField(id="addressfield")
     secretlng = FloatField(id="secretlng")
     secretlat = FloatField(id="secretlat")
+    categories = SelectField("Kategorie", choices=[('Alle', 'Alle'), ('Musik', 'Musik'), ('Bildende Künste', 'Bildende Künste'), ('Schauspiel', 'Schauspiel')])
 
 #### Define Database Tables #######
 class User(UserMixin, db.Model):
@@ -117,8 +118,8 @@ class User(UserMixin, db.Model):
 
 
 class Page(db.Model):
-    creator_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     id = db.Column(db.Integer, primary_key=True)
+    creator_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     artist_name = db.Column(db.String)
     artist_category = db.Column(db.String)
     artist_job = db.Column(db.String)
@@ -231,13 +232,23 @@ def listPages():
     form = LocationForm()
     distances = {}
     if form.validate_on_submit():
-        pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long).filter(Page.creator_id == User.id)       
         distances = {}
-        for page in pages:
-            distances[page] = distanceMath(form.secretlat.data, page.artist_location_lat, form.secretlng.data, page.artist_location_long)
-        return render_template("listPages.html", title="Übersicht", pages=pages, form=form, distances=distances)
-    pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long).filter(Page.creator_id == User.id)
-    return render_template("listPages.html", title="Übersicht", pages=pages, form=form, distances=distances)
+        if form.categories.data == "Alle":
+            pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long)
+            for page in pages:
+                distances[page] = distanceMath(form.secretlat.data, page.artist_location_lat, form.secretlng.data, page.artist_location_long)
+                distances_sorted = {k: v for k, v in sorted(distances.items(), key=lambda x: x[1])}
+        else:
+            pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long).filter(Page.artist_category == form.categories.data)
+            for page in pages:
+                distances[page] = distanceMath(form.secretlat.data, page.artist_location_lat, form.secretlng.data, page.artist_location_long)    
+                distances_sorted = {k: v for k, v in sorted(distances.items(), key=lambda x: x[1])}
+
+        
+        
+        return render_template("listPages.html", title="Übersicht", distances=distances_sorted, form=form)
+    pages = db.session.query(Page.artist_name, Page.artist_job, Page.titlepicture_path, Page.artist_location_lat, Page.artist_location_long)
+    return render_template("listPages.html", title="Übersicht", distances=pages, form=form)
 
 @app.route("/<string:PageTitle>")
 def pageTitle(PageTitle):
